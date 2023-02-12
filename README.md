@@ -6,9 +6,7 @@ API for managing Ord
 ```
 $ pip3 install flask boto3
 $ BITCOIN_NETWORK=testnet \ 
-  BITCOIN_RPC=localhost:8443 \
-  BITCOIN_USERNAME=admin \
-  BITCOIN_PASSWORD=supersecret \
+  BITCOIN_RPC=localhost:8332 \
   S3_BUCKET=mybucket \
   FLASK_APP=api \
   flask run
@@ -55,16 +53,16 @@ Response:
 ```
 {
     "slow": {
-        "rate": 2,
-        "total": 2342    
+        "target_blocks": 25,
+        "total_fee": 2342    
     },
     "medium": {
-        "rate": 6,
-        "total": 8356    
+        "target_blocks": 10,
+        "total_fee": 8356    
     },
     "fast": {
-        "rate": 12,
-        "total": 15323    
+        "target_blocks": 25,
+        "total_fee": 15323    
     },
 }
 ```

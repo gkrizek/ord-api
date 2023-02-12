@@ -10,8 +10,6 @@ s3 = boto3.client("s3")
 
 BITCOIN_NETWORK = os.environ['BITCOIN_NETWORK']
 BITCOIND_RPC = os.environ['BITCOIND_RPC']
-BITCOIND_USERNAME = os.environ['BITCOIND_USERNAME']
-BITCOIND_PASSWORD = os.environ['BITCOIND_PASSWORD']
 S3_BUCKET = os.environ['S3_BUCKET']
 
 
@@ -21,12 +19,21 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
         "receive",
         "transactions",
         "inscribe",
-        "inscriptions"
+        "inscriptions",
+        "fee_rate"
     ]
     if command not in possible_commands:
         print(f"[ERR] Received invalid command {command}.")
         return "", 1
     
+    if command == "fee_rate":
+        crafted_command = [
+            "bitcoin-cli",
+            "-conf=/etc/bitcoin/bitcoin.conf",
+            "estimatesmartfee",
+            fee_rate,
+            "unset"
+        ]
     if command == "send":
         if address is None:
             print(f"[ERR] You must supply an address.")
@@ -120,8 +127,36 @@ def delete_file(path):
 
 
 def get_fee_rates(file_size):
-    requests.post(f"http://{BITCOIND_USERNAME}:{BITCOIND_PASSWORD}@{BITCOIND_RPC}/jsonrpc",data={})
-    return
+    current_rate_fast, fast_status = execute_command("send", file=None, address=None, id=None, fee_rate=1, dryrun=None)
+    if fast_status != 0:
+        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+    current_rate_medium, medium_status = execute_command("send", file=None, address=None, id=None, fee_rate=10, dryrun=None)
+    if medium_status != 0:
+        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+    current_rate_slow, slow_status = execute_command("send", file=None, address=None, id=None, fee_rate=25, dryrun=None)
+    if slow_status != 0:
+        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+
+    file_size_in_kb = file_size / 1000
+    fast_fee = file_size_in_kb * current_rate_fast
+    medium_fee = file_size_in_kb * current_rate_medium
+    slow_fee = file_size_in_kb * current_rate_slow
+
+    response = {
+        "slow": {
+            "target_blocks": 25,
+            "total_fee": slow_fee    
+        },
+        "medium": {
+            "target_blocks": 10,
+            "total_fee": medium_fee    
+        },
+        "fast": {
+            "target_blocks": 1,
+            "total_fee": fast_fee    
+        }
+    }
+    return Response(response, status=200, mimetype='application/json')
 
 
 # API Endpoints
