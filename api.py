@@ -1,7 +1,9 @@
 from flask import Flask, request, Response
 import subprocess
+import requests
 import os
 import boto3
+from botocore.exceptions import ClientError
 
 app = Flask(__name__)
 s3 = boto3.client("s3")
@@ -75,14 +77,23 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
 
 
 def download_file(path):
-    return
+    try:
+        with open(f"/ord/api/{path}", "wb") as data:
+            s3.download_fileobj(S3_BUCKET, path, data)
+        print("[INF] File downloaded successfully")
+    except ClientError as e:
+        print("[ERR] Failed to download file: {e}")
+        return 1
+    return 0
 
 
 def delete_file(path):
+    os.remove(f"/ord/api/{path}")
     return
 
 
 def get_fee_rates(file_size):
+    requests.post(f"http://{BITCOIND_USERNAME}:{BITCOIND_PASSWORD}@{BITCOIND_RPC}/jsonrpc",data={})
     return
 
 
