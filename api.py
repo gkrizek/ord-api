@@ -31,7 +31,7 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
             "bitcoin-cli",
             "-conf=/etc/bitcoin/bitcoin.conf",
             "estimatesmartfee",
-            fee_rate,
+            str(fee_rate),
             "unset"
         ]
     elif command == "send":
@@ -52,7 +52,7 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
             "--data-dir=/ord",
             "wallet", "send",
             address, id,
-            f"--fee-rate={fee_rate}"
+            f"--fee-rate={str(fee_rate)}"
         ]
     elif command == "inscribe":
         if file is None:
@@ -74,7 +74,7 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
             "--data-dir=/ord",
             "wallet", "inscribe",
             file_path,
-            f"--fee-rate={fee_rate}",
+            f"--fee-rate={str(fee_rate)}",
             f"--dry-run={dryrun}"
         ]
     else:
