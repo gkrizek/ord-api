@@ -127,13 +127,13 @@ def delete_file(path):
 
 
 def get_fee_rates(file_size):
-    current_rate_fast, fast_status = execute_command("send", file=None, address=None, id=None, fee_rate=1, dryrun=None)
+    current_rate_fast, fast_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=1, dryrun=None)
     if fast_status != 0:
         return "", 2
-    current_rate_medium, medium_status = execute_command("send", file=None, address=None, id=None, fee_rate=10, dryrun=None)
+    current_rate_medium, medium_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=10, dryrun=None)
     if medium_status != 0:
         return "", 2
-    current_rate_slow, slow_status = execute_command("send", file=None, address=None, id=None, fee_rate=25, dryrun=None)
+    current_rate_slow, slow_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=25, dryrun=None)
     if slow_status != 0:
         return "", 2
 
