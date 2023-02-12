@@ -74,11 +74,11 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
     return stdout, 0
 
 
-def download_file():
+def download_file(path):
     return
 
 
-def delete_file():
+def delete_file(path):
     return
 
 
