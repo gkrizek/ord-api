@@ -229,7 +229,7 @@ def inscribe():
         return Response('{"status":"bad request"}', status=400, mimetype='application/json')
     elif status == 2:
         return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
-    return Response(output, status=200, mimetype='application/json')
+    return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
 @app.get("/api/receive")
@@ -240,7 +240,7 @@ def receive():
         return Response('{"status":"bad request"}', status=400, mimetype='application/json')
     elif status == 2:
         return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
-    return Response(output, status=200, mimetype='application/json')
+    return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
 @app.get("/api/transactions")
@@ -251,7 +251,7 @@ def transactions():
         return Response('{"status":"bad request"}', status=400, mimetype='application/json')
     elif status == 2:
         return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
-    return Response(output, status=200, mimetype='application/json')
+    return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
 @app.get("/api/inscriptions")
@@ -262,7 +262,7 @@ def inscriptions():
         return Response('{"status":"bad request"}', status=400, mimetype='application/json')
     elif status == 2:
         return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
-    return Response(output, status=200, mimetype='application/json')
+    return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
 @app.post("/api/estimate_fees")
@@ -281,4 +281,4 @@ def estimate_fees():
     output, status = get_fee_rates(file_size_bytes)
     if status == 2:
         return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
-    return Response(output, status=200, mimetype='application/json')
+    return Response(json.dumps(output), status=200, mimetype='application/json')
