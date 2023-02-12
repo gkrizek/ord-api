@@ -5,12 +5,13 @@ API for managing Ord
 
 ```
 $ pip3 install flask boto3
-$ BITCOIN_RPC=localhost:8443 \
-    BITCOIN_USERNAME=admin \
-    BITCOIN_PASSWORD=supersecret \
-    S3_BUCKET=mybucket \
-    FLASK_APP=api \
-    flask run
+$ BITCOIN_NETWORK=testnet \ 
+  BITCOIN_RPC=localhost:8443 \
+  BITCOIN_USERNAME=admin \
+  BITCOIN_PASSWORD=supersecret \
+  S3_BUCKET=mybucket \
+  FLASK_APP=api \
+  flask run
 ```
 
 ## Endpoints:
