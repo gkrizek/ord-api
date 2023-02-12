@@ -38,7 +38,7 @@ Response:
 {}
 ```
 
-- `POST /api/fee`
+- `POST /api/estimate_fees`
 
 Request:
 

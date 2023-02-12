@@ -129,13 +129,13 @@ def delete_file(path):
 def get_fee_rates(file_size):
     current_rate_fast, fast_status = execute_command("send", file=None, address=None, id=None, fee_rate=1, dryrun=None)
     if fast_status != 0:
-        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+        return "", 2
     current_rate_medium, medium_status = execute_command("send", file=None, address=None, id=None, fee_rate=10, dryrun=None)
     if medium_status != 0:
-        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+        return "", 2
     current_rate_slow, slow_status = execute_command("send", file=None, address=None, id=None, fee_rate=25, dryrun=None)
     if slow_status != 0:
-        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+        return "", 2
 
     file_size_in_kb = file_size / 1000
     fast_fee = file_size_in_kb * current_rate_fast
@@ -156,7 +156,7 @@ def get_fee_rates(file_size):
             "total_fee": fast_fee    
         }
     }
-    return Response(response, status=200, mimetype='application/json')
+    return response, 0
 
 
 # API Endpoints
