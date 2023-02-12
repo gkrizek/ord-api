@@ -2,6 +2,7 @@ from flask import Flask, request, Response
 import subprocess
 import requests
 import os
+import json
 import boto3
 from botocore.exceptions import ClientError
 
@@ -128,15 +129,18 @@ def delete_file(path):
 
 def get_fee_rates(file_size):
     print(f"[INF] Calculating fee rates...")
-    current_rate_fast, fast_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=1, dryrun=None)
+    request_fast, fast_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=1, dryrun=None)
     if fast_status != 0:
         return "", 2
-    current_rate_medium, medium_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=10, dryrun=None)
+    current_rate_fast = '%f' % json.loads(request_fast)["feerate"]
+    request_medium, medium_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=10, dryrun=None)
     if medium_status != 0:
         return "", 2
-    current_rate_slow, slow_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=25, dryrun=None)
+    current_rate_medium = '%f' % json.loads(request_medium)["feerate"]
+    request_slow, slow_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=25, dryrun=None)
     if slow_status != 0:
         return "", 2
+    current_rate_slow = '%f' % json.loads(request_slow)["feerate"]
 
     file_size_in_kb = round(file_size / 1000)
     fast_fee = file_size_in_kb * current_rate_fast
@@ -190,7 +194,7 @@ def send():
         return Response('{"status":"bad request"}', status=400, mimetype='application/json')
     elif status == 2:
         return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
-    return Response(output, status=200, mimetype='application/json')
+    return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
 @app.post("/api/inscribe")
