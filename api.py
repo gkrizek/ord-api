@@ -89,18 +89,69 @@ def get_fee_rates(file_size):
 # API Endpoints
 @app.post("/api/send")
 def send():
-    print(request.get_json())
-    return "ok"
+    print("[INF] Processing /api/send")
+    input = request.get_json()
+    if input is None:
+        return Response('{"status":"bad request"}', status=400, mimetype='application/json')
+    print(f"[INF] Found data in request {input}")
+
+    try:
+        address = input['address']
+        id = input['inscription_id']
+    except KeyError:
+        return Response('{"status":"missing required fields"}', status=400, mimetype='application/json')
+    
+    if "fee_rate" in input:
+        fee_rate = input['fee_rate']
+    else:
+        fee_rate = get_fee_rates(0)['slow']['rate']
+
+    output, status = execute_command("send", file=None, address=address, id=id, fee_rate=fee_rate, dryrun=None)
+    if status == 1:
+        return Response('{"status":"bad request"}', status=400, mimetype='application/json')
+    elif status == 2:
+        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+    return Response(output, status=200, mimetype='application/json')
 
 
 @app.post("/api/inscribe")
 def inscribe():
-    print(request.get_json())
-    return "ok"
+    print("[INF] Processing /api/inscribe")
+    input = request.get_json()
+    if input is None:
+        return Response('{"status":"bad request"}', status=400, mimetype='application/json')
+    print(f"[INF] Found data in request {input}")
+
+    try:
+        file_path = input['file_path']
+    except KeyError:
+        return Response('{"status":"missing required fields"}', status=400, mimetype='application/json')
+    
+    if "fee_rate" in input:
+        fee_rate = input['fee_rate']
+    else:
+        fee_rate = get_fee_rates(0)['slow']['rate']
+    if "dryrun" in input:
+        dryrun = input['dryrun']
+    else:
+        dryrun = None
+
+    status = download_file(file_path)
+    if status != 0:
+        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+
+    output, status = execute_command("send", file=file_path, address=None, id=None, fee_rate=fee_rate, dryrun=dryrun)
+    delete_file(file_path)
+    if status == 1:
+        return Response('{"status":"bad request"}', status=400, mimetype='application/json')
+    elif status == 2:
+        return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+    return Response(output, status=200, mimetype='application/json')
 
 
 @app.get("/api/receive")
 def receive():
+    print("[INF] Processing /api/receive")
     output, status = execute_command("receive")
     if status == 1:
         return Response('{"status":"bad request"}', status=400, mimetype='application/json')
@@ -111,6 +162,7 @@ def receive():
 
 @app.get("/api/transactions")
 def transactions():
+    print("[INF] Processing /api/transactions")
     output, status = execute_command("transactions")
     if status == 1:
         return Response('{"status":"bad request"}', status=400, mimetype='application/json')
@@ -121,6 +173,7 @@ def transactions():
 
 @app.get("/api/inscriptions")
 def inscriptions():
+    print("[INF] Processing /api/inscriptions")
     output, status = execute_command("inscriptions")
     if status == 1:
         return Response('{"status":"bad request"}', status=400, mimetype='application/json')
@@ -131,7 +184,18 @@ def inscriptions():
 
 @app.post("/api/estimate_fees")
 def estimate_fees():
-    output, status = get_fee_rates(file_size)
+    print("[INF] Processing /api/estimate_fees")
+    input = request.get_json()
+    if input is None:
+        return Response('{"status":"bad request"}', status=400, mimetype='application/json')
+    print(f"[INF] Found data in request {input}") 
+
+    try:
+        file_size_bytes = input['file_size_bytes']
+    except KeyError:
+        return Response('{"status":"missing required fields"}', status=400, mimetype='application/json')
+
+    output, status = get_fee_rates(file_size_bytes)
     if status == 2:
         return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
     return Response(output, status=200, mimetype='application/json')

@@ -1,6 +1,18 @@
 # ord-api
 API for managing Ord
 
+## Running the API
+
+```
+$ pip3 install flask boto3
+$ BITCOIN_RPC=localhost:8443 \
+    BITCOIN_USERNAME=admin \
+    BITCOIN_PASSWORD=supersecret \
+    S3_BUCKET=mybucket \
+    FLASK_APP=api \
+    flask run
+```
+
 ## Endpoints:
 
 - `GET /api/receive`
@@ -63,7 +75,8 @@ Request:
 ```
 {
     "file_path": "",
-    "fee_rate": ""
+    "fee_rate": "",
+    "dryrun": false
 }
 ```
 
@@ -80,7 +93,8 @@ Request:
 ```
 {
     "address": "tb1ql2rd4tsvv8ykka24vywzpz6w7menvzy0dak6w4",
-    "inscription_id": "abc123"
+    "inscription_id": "abc123",
+    "fee_rate": ""
 }
 ```
 
