@@ -37,7 +37,16 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
         if fee_rate is None:
             print(f"[ERR] You must supply a fee rate.")
             return "", 1
-        crafted_command = ["ord", f"--chain={BITCOIN_NETWORK}", "wallet", "send", address, id, f"--fee-rate={fee_rate}"]
+        crafted_command = [
+            "ord",
+            f"--chain={BITCOIN_NETWORK}",
+            "--rpc-url=127.0.0.1",
+            "--cookie-file=/bitcoin/wallet.cookie",
+            "--data-dir=/ord",
+            "wallet", "send",
+            address, id,
+            f"--fee-rate={fee_rate}"
+        ]
     elif command == "inscribe":
         if file is None:
             print(f"[ERR] You must supply a file path.")
@@ -50,9 +59,26 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
                 print(f"[ERR] You must supply a dry run boolean.")
                 return "", 1
         file_path = os.path(file)
-        crafted_command = ["ord", f"--chain={BITCOIN_NETWORK}", "wallet", "inscribe", file_path, f"--fee-rate={fee_rate}", f"--dry-run={dryrun}"]
+        crafted_command = [
+            "ord",
+            f"--chain={BITCOIN_NETWORK}",
+            "--rpc-url=127.0.0.1",
+            "--cookie-file=/bitcoin/wallet.cookie",
+            "--data-dir=/ord",
+            "wallet", "inscribe",
+            file_path,
+            f"--fee-rate={fee_rate}",
+            f"--dry-run={dryrun}"
+        ]
     else:
-        crafted_command = ["ord", f"--chain={BITCOIN_NETWORK}", "wallet", command]
+        crafted_command = [
+            "ord",
+            f"--chain={BITCOIN_NETWORK}",
+            "--rpc-url=127.0.0.1",
+            "--cookie-file=/bitcoin/wallet.cookie",
+            "--data-dir=/ord",
+            "wallet", command
+        ]
 
     try:
         proc = subprocess.Popen(
