@@ -155,15 +155,15 @@ def get_fee_rates(file_size):
     response = {
         "slow": {
             "target_blocks": 25,
-            "total_fee": '%f' % slow_fee    
+            "total_fee": '{:.8f}'.format(slow_fee)
         },
         "medium": {
             "target_blocks": 10,
-            "total_fee": '%f' % medium_fee    
+            "total_fee": '{:.8f}'.format(medium_fee)
         },
         "fast": {
             "target_blocks": 1,
-            "total_fee": '%f' % fast_fee    
+            "total_fee":'{:.8f}'.format(fast_fee)
         }
     }
     return response, 0
