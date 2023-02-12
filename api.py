@@ -143,9 +143,9 @@ def get_fee_rates(file_size):
     current_rate_slow = '%f' % json.loads(request_slow)["feerate"]
 
     file_size_in_kb = round(file_size / 1000)
-    fast_fee = file_size_in_kb * current_rate_fast
-    medium_fee = file_size_in_kb * current_rate_medium
-    slow_fee = file_size_in_kb * current_rate_slow
+    fast_fee = file_size_in_kb * float(current_rate_fast)
+    medium_fee = file_size_in_kb * float(current_rate_medium)
+    slow_fee = file_size_in_kb * float(current_rate_slow)
     print(f"[INF] File Size in Kilobytes: {str(file_size_in_kb)}")
     print(f"[INF] Fee Rate for Fast: {str(current_rate_fast)}")
     print(f"[INF] Fee Rate for Medium:  {str(current_rate_medium)}")
@@ -155,15 +155,15 @@ def get_fee_rates(file_size):
     response = {
         "slow": {
             "target_blocks": 25,
-            "total_fee": slow_fee    
+            "total_fee": '%f' % slow_fee    
         },
         "medium": {
             "target_blocks": 10,
-            "total_fee": medium_fee    
+            "total_fee": '%f' % medium_fee    
         },
         "fast": {
             "target_blocks": 1,
-            "total_fee": fast_fee    
+            "total_fee": '%f' % fast_fee    
         }
     }
     return response, 0
