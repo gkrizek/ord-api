@@ -36,7 +36,7 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
         if fee_rate is None:
             print(f"[ERR] You must supply a fee rate.")
             return "", 1
-        crafted_command = f"ord wallet send {address} {id} --fee-rate={fee_rate}"
+        crafted_command = ["ord", "wallet", "send", address, id, f"--fee-rate={fee_rate}"]
     elif command == "inscribe":
         if file is None:
             print(f"[ERR] You must supply a file path.")
@@ -49,9 +49,9 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
                 print(f"[ERR] You must supply a dry run boolean.")
                 return "", 1
         file_path = os.path(file)
-        crafted_command = f"ord wallet inscribe {file_path} --fee-rate={fee_rate} --dry-run={dryrun}"
+        crafted_command = ["ord", "wallet", "inscribe", file_path, f"--fee-rate={fee_rate}", f"--dry-run={dryrun}"]
     else:
-        crafted_command = f"ord wallet {command}"
+        crafted_command = ["ord", "wallet", command]
 
     try:
         proc = subprocess.Popen(
@@ -66,13 +66,13 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
 
     if proc.returncode != 0:
         print(f"[ERR] Command returned a non zero exit code: {str(proc.returncode)}")
-        print(stderr)
-        print(stdout)
+        print(str(stderr))
+        print(str(stdout))
         return "", 2
 
     print(f"[INF] Command ran successfully with return code: {str(proc.returncode)}")
-    print(stderr)
-    print(stdout)
+    print(str(stderr))
+    print(str(stdout))
     return stdout, 0
 
 
