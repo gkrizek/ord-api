@@ -34,7 +34,7 @@ def execute_command(command, file=None, address=None, id=None, fee_rate=None, dr
             fee_rate,
             "unset"
         ]
-    if command == "send":
+    elif command == "send":
         if address is None:
             print(f"[ERR] You must supply an address.")
             return "", 1
