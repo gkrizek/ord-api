@@ -127,6 +127,7 @@ def delete_file(path):
 
 
 def get_fee_rates(file_size):
+    print(f"[INF] Calculating fee rates...")
     current_rate_fast, fast_status = execute_command("fee_rate", file=None, address=None, id=None, fee_rate=1, dryrun=None)
     if fast_status != 0:
         return "", 2
@@ -137,10 +138,15 @@ def get_fee_rates(file_size):
     if slow_status != 0:
         return "", 2
 
-    file_size_in_kb = file_size / 1000
+    file_size_in_kb = round(file_size / 1000)
     fast_fee = file_size_in_kb * current_rate_fast
     medium_fee = file_size_in_kb * current_rate_medium
     slow_fee = file_size_in_kb * current_rate_slow
+    print(f"[INF] File Size in Kilobytes: {str(file_size_in_kb)}")
+    print(f"[INF] Fee Rate for Fast: {str(current_rate_fast)}")
+    print(f"[INF] Fee Rate for Medium:  {str(current_rate_medium)}")
+    print(f"[INF] Fee Rate for Small: {str(current_rate_slow)}")
+
 
     response = {
         "slow": {
