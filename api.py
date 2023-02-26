@@ -12,6 +12,7 @@ s3 = boto3.client("s3")
 BITCOIN_NETWORK = os.environ['BITCOIN_NETWORK']
 BITCOIND_RPC = os.environ['BITCOIND_RPC']
 S3_BUCKET = os.environ['S3_BUCKET']
+ORD_URL = os.environ['ORD_URL']
 
 
 def execute_command(command, file=None, address=None, id=None, fee_rate=None, dryrun=None):
@@ -169,7 +170,17 @@ def get_fee_rates(file_size):
     return response, 0
 
 
-# API Endpoints
+def get_json_from_request(request):
+    result = request.split('<main>')[1].split('</main>')[0]
+    final = result.replace(" ", "").replace('\\n', '').replace('",]', '"]')
+    return json.loads(final)
+
+
+'''
+API Endpoints
+'''
+
+# WIP Routes
 @app.post("/wip/api/send")
 def send():
     print("[INF] Processing /api/send")
@@ -281,4 +292,44 @@ def estimate_fees():
     output, status = get_fee_rates(file_size_bytes)
     if status == 2:
         return Response('{"status":"internal server error"}', status=500, mimetype='application/json')
+    return Response(json.dumps(output), status=200, mimetype='application/json')
+
+# Functional Routes
+@app.get("/inscription/<id>")
+def get_inscription(id):
+    req = requests.get(f"http://{ORD_URL}/inscription/{id}")
+    if req.status_code != 200:
+        print(f"[ERR] Got bad status code from Ord: {req.status_code}")
+        content = str(req.content)
+        print(f"[ERR] Ord response:: {content}") 
+        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+    content = str(req.content)
+    output = get_json_from_request(content)
+    return Response(json.dumps(output), status=200, mimetype='application/json')
+
+
+
+@app.get("/utxo/<id>")
+def get_utxo(id):
+    req = requests.get(f"http://{ORD_URL}/output/{id}")
+    if req.status_code != 200:
+        print(f"[ERR] Got bad status code from Ord: {req.status_code}")
+        content = str(req.content)
+        print(f"[ERR] Ord response:: {content}") 
+        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+    content = str(req.content)
+    output = get_json_from_request(content)
+    return Response(json.dumps(output), status=200, mimetype='application/json')
+
+
+@app.get("/address/<id>")
+def get_address(id):
+    req = requests.get(f"http://{ORD_URL}/??????/{id}")
+    if req.status_code != 200:
+        print(f"[ERR] Got bad status code from Ord: {req.status_code}")
+        content = str(req.content)
+        print(f"[ERR] Ord response:: {content}") 
+        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+    content = str(req.content)
+    output = get_json_from_request(content)
     return Response(json.dumps(output), status=200, mimetype='application/json')
