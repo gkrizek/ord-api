@@ -170,7 +170,7 @@ def get_fee_rates(file_size):
 
 
 # API Endpoints
-@app.post("/api/send")
+@app.post("/wip/api/send")
 def send():
     print("[INF] Processing /api/send")
     input = request.get_json()
@@ -197,7 +197,7 @@ def send():
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
-@app.post("/api/inscribe")
+@app.post("/wip/api/inscribe")
 def inscribe():
     print("[INF] Processing /api/inscribe")
     input = request.get_json()
@@ -232,7 +232,7 @@ def inscribe():
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
-@app.get("/api/receive")
+@app.get("/wip/api/receive")
 def receive():
     print("[INF] Processing /api/receive")
     output, status = execute_command("receive")
@@ -243,7 +243,7 @@ def receive():
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
-@app.get("/api/transactions")
+@app.get("/wip/api/transactions")
 def transactions():
     print("[INF] Processing /api/transactions")
     output, status = execute_command("transactions")
@@ -254,7 +254,7 @@ def transactions():
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
-@app.get("/api/inscriptions")
+@app.get("/wip/api/inscriptions")
 def inscriptions():
     print("[INF] Processing /api/inscriptions")
     output, status = execute_command("inscriptions")
@@ -265,7 +265,7 @@ def inscriptions():
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
-@app.post("/api/estimate_fees")
+@app.post("/wip/api/estimate_fees")
 def estimate_fees():
     print("[INF] Processing /api/estimate_fees")
     input = request.get_json()
