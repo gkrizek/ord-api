@@ -3,6 +3,7 @@ import subprocess
 import requests
 import os
 import json
+import base64
 import boto3
 from botocore.exceptions import ClientError
 
@@ -307,6 +308,21 @@ def get_inscription(id):
     output = get_json_from_request(content)
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
+
+@app.get("/inscription/<id>/content")
+def get_inscription_content(id):
+    req = requests.get(f"http://{ORD_URL}/content/{id}")
+    if req.status_code != 200:
+        print(f"[ERR] Got bad status code from Ord: {req.status_code}")
+        content = str(req.content)
+        print(f"[ERR] Ord response:: {content}") 
+        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+    content = req.content
+    data = base64.b64encode(content).decode('utf-8')
+    output = {
+        "content": f"{data}"
+    }
+    return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
 @app.get("/utxo/<id>")
