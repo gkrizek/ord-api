@@ -311,6 +311,7 @@ def get_inscription(id):
 
 @app.get("/inscription/<id>/content")
 def get_inscription_content(id):
+    # Get Content
     req = requests.get(f"http://{ORD_URL}/content/{id}")
     if req.status_code != 200:
         print(f"[ERR] Got bad status code from Ord: {req.status_code}")
@@ -319,8 +320,19 @@ def get_inscription_content(id):
         return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
     content = req.content
     data = base64.b64encode(content).decode('utf-8')
+    # Get Content Type
+    req = requests.get(f"http://{ORD_URL}/inscription/{id}")
+    if req.status_code != 200:
+        print(f"[ERR] Got bad status code from Ord: {req.status_code}")
+        content = str(req.content)
+        print(f"[ERR] Ord response:: {content}") 
+        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+    content = str(req.content)
+    type_output = get_json_from_request(content)
+    content_type = type_output['content_type']
     output = {
-        "content": f"{data}"
+        "content": data,
+        "content_type": content_type
     }
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
