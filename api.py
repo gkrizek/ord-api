@@ -303,7 +303,7 @@ def get_inscription(id):
         print(f"[ERR] Got bad status code from Ord: {req.status_code}")
         content = str(req.content)
         print(f"[ERR] Ord response:: {content}") 
-        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+        return Response('{"status":"' + str(content) + '"}', status=req.status_code, mimetype='application/json')
     content = str(req.content)
     output = get_json_from_request(content)
     return Response(json.dumps(output), status=200, mimetype='application/json')
@@ -317,7 +317,7 @@ def get_inscription_content(id):
         print(f"[ERR] Got bad status code from Ord: {req.status_code}")
         content = str(req.content)
         print(f"[ERR] Ord response:: {content}") 
-        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+        return Response('{"status":"' + str(content) + '"}', status=req.status_code, mimetype='application/json')
     content = req.content
     data = base64.b64encode(content).decode('utf-8')
     # Get Content Type
@@ -326,7 +326,7 @@ def get_inscription_content(id):
         print(f"[ERR] Got bad status code from Ord: {req.status_code}")
         content = str(req.content)
         print(f"[ERR] Ord response:: {content}") 
-        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+        return Response('{"status":"' + str(content) + '"}', status=req.status_code, mimetype='application/json')
     content = str(req.content)
     type_output = get_json_from_request(content)
     content_type = type_output['content_type']
@@ -344,7 +344,7 @@ def get_utxo(id):
         print(f"[ERR] Got bad status code from Ord: {req.status_code}")
         content = str(req.content)
         print(f"[ERR] Ord response:: {content}") 
-        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
+        return Response('{"status":"' + str(content) + '"}', status=req.status_code, mimetype='application/json')
     content = str(req.content)
     output = get_json_from_request(content)
     return Response(json.dumps(output), status=200, mimetype='application/json')
@@ -352,12 +352,47 @@ def get_utxo(id):
 
 @app.get("/address/<id>")
 def get_address(id):
-    req = requests.get(f"http://{ORD_URL}/??????/{id}")
+    # Get all UTXOs for Address
+    if BITCOIN_NETWORK == "testnet":
+        esplora_url = f"https://mempool.space/testnet/api/address/{id}/txs"
+    elif BITCOIN_NETWORK == "signet":
+        esplora_url = f"https://mempool.space/signet/api/address/{id}/txs"
+    else: 
+        esplora_url = f"https://mempool.space/api/address/{id}/txs"
+    req = requests.get(esplora_url)
     if req.status_code != 200:
         print(f"[ERR] Got bad status code from Ord: {req.status_code}")
         content = str(req.content)
         print(f"[ERR] Ord response:: {content}") 
-        return Response(f'{"status":"{content}"}', status=req.status_code, mimetype='application/json')
-    content = str(req.content)
-    output = get_json_from_request(content)
+        return Response('{"status":"' + str(content) + '"}', status=req.status_code, mimetype='application/json')
+    tx_list = req.json()
+    utxo_list = []
+    inscription_list = []
+    for tx in tx_list:
+        print(tx)
+        for index, out in enumerate(tx['vout']):
+            if out['scriptpubkey_address'] == id:
+                utxo_list.append(f"{tx['txid']}:{index}")
+
+    for utxo in utxo_list:
+        print(utxo)
+        req = requests.get(f"http://{ORD_URL}/output/{utxo}")
+        if req.status_code == 404:
+            continue
+        if req.status_code != 200:
+            print(f"[ERR] Got bad status code from Ord: {req.status_code}")
+            content = str(req.content)
+            print(f"[ERR] Ord response:: {content}") 
+            return Response('{"status":"' + str(content) + '"}', status=req.status_code, mimetype='application/json')
+        content = str(req.content)
+        utxo_output = get_json_from_request(content)
+        if len(utxo_output['inscriptions']) > 0:
+            inscription_list.append({
+                "inscriptions": utxo_output['inscriptions'],
+                "output": utxo
+            })
+    output = {
+        "address": id,
+        "inscriptions": inscription_list
+    }
     return Response(json.dumps(output), status=200, mimetype='application/json')
