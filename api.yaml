@@ -13,10 +13,10 @@ info:
     url: 'https://voltage.cloud/wp-content/uploads/2022/01/voltage-logo.png'
   license: null
 servers:
-  - url: 'https://ordinals.voltage.cloud'
+  - url: 'https://signet.ordinals.voltage.cloud'
     description: ''
 paths:
-  /inscription/{inscription_id}:
+  /api/inscription/{inscription_id}:
     summary: Get Information about an Inscription
     get:
       responses:
@@ -126,9 +126,9 @@ paths:
                 offset:
                   type: string
                   description: ''
-      summary: /inscription/{inscription_id}
+      summary: /api/inscription/{inscription_id}
       description: Get Information about an Inscription
-  /inscription/{inscription_id}/content:
+  /api/inscription/{inscription_id}/content:
     summary: Get Content of an Inscription
     get:
       responses:
@@ -158,9 +158,9 @@ paths:
                 content_type:
                   type: string
                   description: What type of content it is
-      summary: /inscription/{inscription_id}/content
+      summary: /api/inscription/{inscription_id}/content
       description: Get Content of an Inscription
-  /utxo/{utxo}:
+  /api/utxo/{utxo}:
     summary: Get Inscriptions for UTXO in the format of d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0
     get:
       responses:
@@ -220,9 +220,9 @@ paths:
                 transaction:
                   type: string
                   description: Transaction ID
-      summary: /utxo/{utxo}
+      summary: /api/utxo/{utxo}
       description: Get Inscriptions for UTXO in the format of d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0
-  /address/{address}:
+  /api/address/{address}:
     summary: Get All Inscriptions for Address
     get:
       responses:
@@ -277,7 +277,7 @@ paths:
                         description: List of Inscriptions for Output
                         items:
                           type: string
-      summary: /address/{address}
+      summary: /api/address/{address}
       description: Get All Inscriptions for Address
 externalDocs:
   description: View the Voltage Documentation

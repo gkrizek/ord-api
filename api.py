@@ -303,7 +303,7 @@ def estimate_fees():
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 # Functional Routes
-@app.get("/inscription/<id>")
+@app.get("/api/inscription/<id>")
 def get_inscription(id):
     req = requests.get(f"http://{ORD_URL}/inscription/{id}")
     if req.status_code != 200:
@@ -317,7 +317,7 @@ def get_inscription(id):
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
-@app.get("/inscription/<id>/content")
+@app.get("/api/inscription/<id>/content")
 def get_inscription_content(id):
     # Get Content
     req = requests.get(f"http://{ORD_URL}/content/{id}")
@@ -345,7 +345,7 @@ def get_inscription_content(id):
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
-@app.get("/utxo/<id>")
+@app.get("/api/utxo/<id>")
 def get_utxo(id):
     req = requests.get(f"http://{ORD_URL}/output/{id}")
     if req.status_code != 200:
@@ -358,7 +358,7 @@ def get_utxo(id):
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
-@app.get("/address/<id>")
+@app.get("/api/address/<id>")
 def get_address(id):
     # Get all UTXOs for Address
     if BITCOIN_NETWORK == "testnet":
