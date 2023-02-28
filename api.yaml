@@ -1,0 +1,285 @@
+openapi: 3.0.2
+info:
+  title: Voltage Ordinals API
+  version: 1.0.0
+  description: >-
+    This is the API Spec for the Voltage Ordinals API.
+  termsOfService: 'https://voltage.cloud/terms'
+  contact:
+    name: Voltage Support
+    url: 'https://voltage.cloud'
+    email: support@voltage.cloud
+  x-logo:
+    url: 'https://voltage.cloud/wp-content/uploads/2022/01/voltage-logo.png'
+  license: null
+servers:
+  - url: 'https://ordinals.voltage.cloud'
+    description: ''
+paths:
+  /inscription/{inscription_id}:
+    summary: Get Information about an Inscription
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  number:
+                    type: string
+                    description: Inscription Number
+                  id:
+                    type: string
+                    description: Inscription ID
+                  address:
+                    type: string
+                    description: Address of Owner
+                  output:
+                    type: string
+                    description: Output ID of the Inscription
+                  sat:
+                    type: string
+                    description: ''
+                  content_type:
+                    type: string
+                    description: Content Type of Inscription
+                  timestamp:
+                    type: string
+                    description: ''
+                  genesis_height:
+                    type: string
+                    description: Genesis Height of Inscription
+                  genesis_fee: 
+                    type: string
+                    description: Genesis Fee of Inscription
+                  genesis_transaction:
+                    type: string
+                    description: Genesis Transaction of Inscription
+                  location:
+                    type: string
+                    description: ''
+                  offset:
+                    type: string
+                    description: ''
+                example:
+                  number: "435345"
+                  id: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043i0"
+                  address: "tb1px3sa02c0k3clwyf038mj9u6k2f5urln47pmrvl2z22u7kzv83k7qv0nd8u"
+                  output: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0"
+                  sat: ""
+                  content_type: "image/jpeg"
+                  timestamp: "2023-02-2712:00:01UTC"
+                  genesis_height: "131856"
+                  genesis_fee: "763"
+                  genesis_transaction: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043"
+                  location: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0:0"
+                  offset: "0"
+              example:
+                number: "435345"
+                id: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043i0"
+                address: "tb1px3sa02c0k3clwyf038mj9u6k2f5urln47pmrvl2z22u7kzv83k7qv0nd8u"
+                output: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0"
+                sat: ""
+                content_type: "image/jpeg"
+                timestamp: "2023-02-2712:00:01UTC"
+                genesis_height: "131856"
+                genesis_fee: "763"
+                genesis_transaction: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043"
+                location: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0:0"
+                offset: "0"
+              type: object
+              properties:
+                number:
+                  type: string
+                  description: Inscription Number
+                id:
+                  type: string
+                  description: Inscription ID
+                address:
+                  type: string
+                  description: Address of Owner
+                output:
+                  type: string
+                  description: Output ID of the Inscription
+                sat:
+                  type: string
+                  description: ''
+                content_type:
+                  type: string
+                  description: Content Type of Inscription
+                timestamp:
+                  type: string
+                  description: ''
+                genesis_height:
+                  type: string
+                  description: Genesis Height of Inscription
+                genesis_fee: 
+                  type: string
+                  description: Genesis Fee of Inscription
+                genesis_transaction:
+                  type: string
+                  description: Genesis Transaction of Inscription
+                location:
+                  type: string
+                  description: ''
+                offset:
+                  type: string
+                  description: ''
+      summary: /inscription/{inscription_id}
+      description: Get Information about an Inscription
+  /inscription/{inscription_id}/content:
+    summary: Get Content of an Inscription
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: string
+                    description: Content in Base64 Encoding
+                  content_type:
+                    type: string
+                    description: What type of content it is
+                example:
+                  content_type: "image/jpeg"
+                  content: "/9j/4AAQSkZJRgABAQAAAQABAAD/2"
+              example:
+                content_type: "image/jpeg"
+                content: "/9j/4AAQSkZJRgABAQAAAQABAAD/2"
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Content in Base64 Encoding
+                content_type:
+                  type: string
+                  description: What type of content it is
+      summary: /inscription/{inscription_id}/content
+      description: Get Content of an Inscription
+  /utxo/{utxo}:
+    summary: Get Inscriptions for UTXO in the format of d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inscriptions:
+                    type: array
+                    description: List of Inscriptions
+                    items:
+                        type: string
+                  output_value:
+                    type: string
+                    description: ''
+                  script_pubkey:
+                    type: string
+                    description: ''
+                  address:
+                    type: string
+                    description: Associated Address
+                  transaction:
+                    type: string
+                    description: Transaction ID
+                example:
+                  inscriptions:
+                    - "c4dea94660dc46122a6c65c683f36c7e98eefc0bb44fa5197307dc77b5b68841i0"
+                  output_value: "10000"
+                  script_pubkey: "OP_PUSHNUM_1OP_PUSHBYTES_3264ff1c3bce90b51aa8184a78b61b6df0a6b8ec5c7b4f87134bdcdb6161491739"
+                  address: "tb1pvnl3cw7wjz6342qcffutvxmd7znt3mzu0d8cwy6tmndkzc2fzuus0ggfqe"
+                  transaction: "c4dea94660dc46122a6c65c683f36c7e98eefc0bb44fa5197307dc77b5b68841"
+              example:
+                inscriptions:
+                  - "c4dea94660dc46122a6c65c683f36c7e98eefc0bb44fa5197307dc77b5b68841i0"
+                output_value: "10000"
+                script_pubkey: "OP_PUSHNUM_1OP_PUSHBYTES_3264ff1c3bce90b51aa8184a78b61b6df0a6b8ec5c7b4f87134bdcdb6161491739"
+                address: "tb1pvnl3cw7wjz6342qcffutvxmd7znt3mzu0d8cwy6tmndkzc2fzuus0ggfqe"
+                transaction: "c4dea94660dc46122a6c65c683f36c7e98eefc0bb44fa5197307dc77b5b68841"
+              type: object
+              properties:
+                inscriptions:
+                  type: array
+                  description: List of Inscriptions
+                  items:
+                      type: string
+                output_value:
+                  type: string
+                  description: ''
+                script_pubkey:
+                  type: string
+                  description: ''
+                address:
+                  type: string
+                  description: Associated Address
+                transaction:
+                  type: string
+                  description: Transaction ID
+      summary: /utxo/{utxo}
+      description: Get Inscriptions for UTXO in the format of d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0
+  /address/{address}:
+    summary: Get All Inscriptions for Address
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inscriptions:
+                    type: array
+                    description: List of Inscriptions
+                    items:
+                      type: object
+                      properties:
+                        output:
+                          type: string
+                          description: Output belonging to Address
+                        inscriptions:
+                          type: array
+                          description: List of Inscriptions for Output
+                          items:
+                            type: string
+                  address:
+                    type: string
+                    description: ''
+                example:
+                  inscriptions:
+                    - inscriptions:
+                        - "c4dea94660dc46122a6c65c683f36c7e98eefc0bb44fa5197307dc77b5b68841i0"
+                      output: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0"
+                  address: "tb1pvnl3cw7wjz6342qcffutvxmd7znt3mzu0d8cwy6tmndkzc2fzuus0ggfqe"
+              example:
+                inscriptions:
+                  - inscriptions:
+                      - "c4dea94660dc46122a6c65c683f36c7e98eefc0bb44fa5197307dc77b5b68841i0"
+                    output: "d87c726daf8fa165051161aea40d0cbe845a91b58dcedbf60a54576b4e996043:0"
+                address: "tb1pvnl3cw7wjz6342qcffutvxmd7znt3mzu0d8cwy6tmndkzc2fzuus0ggfqe"
+              type: object
+              properties:
+                inscriptions:
+                  type: array
+                  description: List of Inscriptions
+                  items:
+                    type: object
+                    properties:
+                      output:
+                        type: string
+                        description: Output belonging to Address
+                      inscriptions:
+                        type: array
+                        description: List of Inscriptions for Output
+                        items:
+                          type: string
+      summary: /address/{address}
+      description: Get All Inscriptions for Address
+externalDocs:
+  description: View the Voltage Documentation
+  url: 'https://docs.voltage.cloud'
+tags: []

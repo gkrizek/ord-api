@@ -180,6 +180,12 @@ def get_json_from_request(request):
 '''
 API Endpoints
 '''
+# Home
+@app.get("/")
+def get_docs():
+    f = open('index.html', 'r').read()
+    return Response(f, status=200)
+
 
 # WIP Routes
 @app.post("/wip/api/send")
@@ -306,6 +312,7 @@ def get_inscription(id):
         return Response('{"status":"' + str(content) + '"}', status=req.status_code, mimetype='application/json')
     content = str(req.content)
     output = get_json_from_request(content)
+    del output['content']
     return Response(json.dumps(output), status=200, mimetype='application/json')
 
 
