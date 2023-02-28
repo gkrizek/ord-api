@@ -1,4 +1,4 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 import subprocess
 import requests
 import os
@@ -7,6 +7,7 @@ import base64
 import boto3
 from botocore.exceptions import ClientError
 
+ASSETS_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 s3 = boto3.client("s3")
 
@@ -403,3 +404,8 @@ def get_address(id):
         "inscriptions": inscription_list
     }
     return Response(json.dumps(output), status=200, mimetype='application/json')
+
+
+if __name__ == '__main__':
+    context = ('default.crt', 'default.key')
+    app.run(ssl_context=context)
