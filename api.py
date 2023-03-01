@@ -11,11 +11,11 @@ ASSETS_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 s3 = boto3.client("s3")
 
-BITCOIN_NETWORK = os.environ['BITCOIN_NETWORK']
-BITCOIND_RPC = os.environ['BITCOIND_RPC']
-S3_BUCKET = os.environ['S3_BUCKET']
-ORD_URL = os.environ['ORD_URL']
-
+BITCOIN_NETWORK = os.getenv("BITCOIN_NETWORK", "mainnet")
+BITCOIND_RPC = os.getenv("BITCOIND_RPC", "127.0.0.1:8332")
+S3_BUCKET = os.getenv("S3_BUCKET", "ord-bucket")
+PORT = os.getenv("PORT", 443)
+ORD_URL = os.getenv("ORD_URL", "127.0.0.1:8888")
 
 def execute_command(command, file=None, address=None, id=None, fee_rate=None, dryrun=None):
     possible_commands = [
@@ -377,13 +377,11 @@ def get_address(id):
     utxo_list = []
     inscription_list = []
     for tx in tx_list:
-        print(tx)
         for index, out in enumerate(tx['vout']):
             if out['scriptpubkey_address'] == id:
                 utxo_list.append(f"{tx['txid']}:{index}")
 
     for utxo in utxo_list:
-        print(utxo)
         req = requests.get(f"http://{ORD_URL}/output/{utxo}")
         if req.status_code == 404:
             continue
@@ -408,4 +406,4 @@ def get_address(id):
 
 if __name__ == '__main__':
     context = ('default.crt', 'default.key')
-    app.run(ssl_context=context)
+    app.run(host="0.0.0.0", port=PORT, ssl_context=context)
